@@ -14,7 +14,6 @@ def replaceIdents(source, env):
     with open(source,'r') as handle:
         code = handle.read()
     codeAst = ast.parse(code, source)
-#    print(ast.dump(codeAst))
     
     def freshName(env):
         NAME_LENGTH = 16
@@ -54,7 +53,10 @@ def replaceIdents(source, env):
 
         def visit_Import(self, node):
             for al in node.names:
-                self.norepl.append(al.name)
+                if(al.asname):
+                    self.norepl.append(al.asname)
+                else:
+                    self.norepl.append(al.name)
             return node
         def visit_Name(self, node):
             nId = self.changeName(node.id)
